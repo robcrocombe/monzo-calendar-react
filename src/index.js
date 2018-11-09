@@ -1,12 +1,16 @@
 import 'babel-polyfill';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import App from './app';
 
-const App = () => (
-  <div className="app">
-    <h1>Hello Parcel x React</h1>
-  </div>
-);
+Storage.prototype.setObject = function(key, value) {
+  this.setItem(key, JSON.stringify(value));
+};
+
+Storage.prototype.getObject = function(key) {
+  const value = this.getItem(key);
+  return value && JSON.parse(value);
+};
 
 ReactDOM.render(<App />, document.getElementById('app'));
 

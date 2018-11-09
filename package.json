@@ -39,7 +39,8 @@
     "parcel": "1.10.3",
     "postcss-modules": "1.4.1",
     "react": "16.6.1",
-    "react-dom": "16.6.1"
+    "react-dom": "16.6.1",
+    "react-redux": "5.1.0"
   },
   "devDependencies": {
     "@babel/core": "7.1.5",
