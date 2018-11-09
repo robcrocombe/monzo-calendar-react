@@ -1,0 +1,23 @@
+html,
+body,
+#app {
+  height: 100%;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+footer {
+  margin: 2rem;
+  flex-shrink: 0;
+}
+
+code {
+  border-radius: 2px;
+}
+
+#gh-link {
+  font-size: 0.875rem;
+  user-select: auto;
+}

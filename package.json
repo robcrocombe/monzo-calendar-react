@@ -1,0 +1,63 @@
+{
+  "name": "monzo-calendar-react",
+  "version": "1.0.0",
+  "description": "A calendar for your Monzo money (now in React)",
+  "main": "index.js",
+  "scripts": {
+    "start": "parcel ./index.html",
+    "lint": "npm run lint:prettier && npm run lint:js && npm run lint:scss",
+    "lint:prettier": "npm run prettier -- -l 'src/**/*.{js,jsx}' || exit 0",
+    "lint:js": "eslint --format=node_modules/eslint-codeframe-formatter --ignore-path .gitignore src/",
+    "lint:scss": "stylelint \"**/*.scss\" --syntax scss",
+    "prettier": "prettier --write",
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "src/**/*.{js,vue}": [
+      "npm run prettier",
+      "git add"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/robcrocombe/monzo-calendar-react.git"
+  },
+  "author": "Rob Crocombe <me@robcrocombe.com> (http://robcrocombe.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/robcrocombe/monzo-calendar-react/issues"
+  },
+  "homepage": "https://github.com/robcrocombe/monzo-calendar-react#readme",
+  "dependencies": {
+    "autoprefixer": "8.0.0",
+    "babel-polyfill": "6.26.0",
+    "bulma": "0.7.2",
+    "css-loader": "0.28.10",
+    "gh-pages": "1.1.0",
+    "moment": "2.22.2",
+    "node-sass": "4.10.0",
+    "parcel": "1.10.3",
+    "postcss-modules": "1.4.1",
+    "react": "16.6.1",
+    "react-dom": "16.6.1"
+  },
+  "devDependencies": {
+    "@babel/core": "7.1.5",
+    "@babel/preset-react": "7.0.0",
+    "eslint": "4.19.1",
+    "eslint-codeframe-formatter": "1.0.2",
+    "eslint-config-airbnb-base": "13.1.0",
+    "eslint-plugin-import": "2.14.0",
+    "husky": "1.1.3",
+    "lint-staged": "8.0.4",
+    "prettier": "1.15.1"
+  },
+  "browserslist": [
+    "last 2 versions"
+  ],
+  "prettier": {
+    "printWidth": 100,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  }
+}
