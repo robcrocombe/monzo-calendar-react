@@ -1,6 +1,6 @@
 import 'babel-polyfill';
-import React from 'react';
-import ReactDOM from 'react-dom';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import App from './app';
 
 Storage.prototype.setObject = function(key, value) {
@@ -15,6 +15,6 @@ Storage.prototype.getObject = function(key) {
 ReactDOM.render(<App />, document.getElementById('app'));
 
 // Hot Module Replacement
-if (module.hot) {
-  module.hot.accept();
+if ((module as any).hot) {
+  (module as any).hot.accept();
 }
