@@ -1,7 +1,43 @@
 import * as React from 'react';
 
-class NavBar extends React.Component {
-  render() {
+interface State {
+  showLoginButton?: boolean;
+  hasClientVars?: boolean;
+}
+
+class NavBar extends React.Component<{}, State> {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showLoginButton: true,
+      hasClientVars: false,
+    };
+  }
+
+  public render() {
+    let loginButton: React.ReactNode;
+    if (this.state.showLoginButton) {
+      if (this.state.hasClientVars) {
+        loginButton = (
+          <a className="button is-primary" href="monzoLoginUrl">
+            Login with Monzo
+          </a>
+        );
+      } else {
+        loginButton = (
+          <button type="button" className="button is-primary">
+            Login with Monzo
+          </button>
+        );
+      }
+    } else {
+      loginButton = (
+        <button type="button" className="button">
+          Log out
+        </button>
+      );
+    }
+
     return (
       <nav className="navbar has-shadow is-light">
         <div className="navbar-brand">
@@ -20,19 +56,7 @@ class NavBar extends React.Component {
           <span>diff</span>
         </div>
         <div className="navbar-end">
-          {/* <div className="navbar-item" v-if="showLoginButton"> */}
-          {/*   <a v-if="hasClientVars" className="button is-primary" href="monzoLoginUrl"> */}
-          {/*     Login with Monzo */}
-          {/*   </a> */}
-          {/*   <button v-else type="button" className="button is-primary"> */}
-          {/*     Login with Monzo */}
-          {/*   </button> */}
-          {/* </div> */}
-          {/* <div className="navbar-item" v-else> */}
-          {/*   <button type="button" className="button"> */}
-          {/*     Log out */}
-          {/*   </button> */}
-          {/* </div> */}
+          <div className="navbar-item">{loginButton}</div>
         </div>
         {/*<auth-modal
           :visible="showAuthModal"
