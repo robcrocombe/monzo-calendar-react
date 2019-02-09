@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "parcel ./index.html",
-    "lint": "npm run lint:prettier && npm run lint:js && npm run lint:scss",
-    "lint:prettier": "npm run prettier -- -l 'src/**/*.{js,jsx}' || exit 0",
+    "lint": "yarn lint:prettier && yarn lint:js && yarn lint:scss",
+    "lint:prettier": "yarn prettier --loglevel warn 'src/**/*.{js,ts,tsx}'",
     "lint:scss": "stylelint \"**/*.scss\" --syntax scss",
     "prettier": "prettier --write"
   },
@@ -32,29 +32,28 @@
   },
   "homepage": "https://github.com/robcrocombe/monzo-calendar-react#readme",
   "dependencies": {
-    "@types/react": "16.7.17",
-    "@types/react-dom": "16.0.11",
-    "autoprefixer": "8.0.0",
+    "@types/react": "16.8.2",
+    "@types/react-dom": "16.8.0",
+    "autoprefixer": "9.4.7",
     "babel-polyfill": "6.26.0",
-    "bulma": "0.7.2",
-    "css-loader": "0.28.10",
-    "gh-pages": "1.1.0",
-    "moment": "2.22.2",
-    "node-sass": "4.10.0",
-    "parcel": "1.10.3",
+    "bulma": "0.7.4",
+    "gh-pages": "2.0.1",
+    "moment": "2.24.0",
+    "node-sass": "4.11.0",
+    "parcel": "1.11.0",
     "postcss-modules": "1.4.1",
-    "react": "16.6.3",
-    "react-dom": "16.6.3",
+    "react": "16.8.1",
+    "react-dom": "16.8.1",
     "react-redux": "6.0.0",
     "redux": "4.0.1",
-    "typescript": "3.2.2"
+    "typescript": "3.3.3"
   },
   "devDependencies": {
     "@babel/core": "7.2.2",
     "@babel/preset-react": "7.0.0",
-    "husky": "1.2.0",
-    "lint-staged": "8.1.0",
-    "prettier": "1.15.3"
+    "husky": "1.3.1",
+    "lint-staged": "8.1.3",
+    "prettier": "1.16.4"
   },
   "browserslist": [
     "last 2 versions"
