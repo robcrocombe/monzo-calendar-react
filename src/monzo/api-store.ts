@@ -1,4 +1,4 @@
-import * as authService from './auth.service';
+import { authStore } from './auth-store';
 import * as calService from './../calendar/calendar.service';
 // import { events, Event } from './../events';
 
@@ -29,7 +29,7 @@ export function init() {
         return;
       }
 
-      authService
+      authStore
         .getToken(code)
         .then(res => {
           sessionToken = res.access_token;
