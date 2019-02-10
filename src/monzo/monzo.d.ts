@@ -9,7 +9,9 @@ declare namespace monzo {
     | 'entertainment'
     | 'shopping'
     | 'holidays'
-    | 'groceries';
+    | 'groceries'
+    | 'personal_care'
+    | 'family';
 
   interface InitResponse {
     transactions: monzo.Transaction[];
@@ -38,15 +40,16 @@ declare namespace monzo {
   }
 
   interface Transaction {
-    amount: number;
-    category: Category;
-    created: string;
-    currency: string;
-    description: string;
-    id: string;
-    merchant: string;
-    notes: string;
-    settled: string;
-    updated: string;
+    amount?: number;
+    category?: Category;
+    created?: string;
+    currency?: string;
+    description?: string;
+    id?: string;
+    merchant?: string;
+    notes?: string;
+    settled?: string;
+    updated?: string;
+    debit?: boolean;
   }
 }

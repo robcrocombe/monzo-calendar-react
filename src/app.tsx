@@ -1,10 +1,10 @@
-import * as React from 'react';
+import React from 'react';
 import NavBar from './common/nav-bar';
 import Calendar from './calendar/calendar';
 
 export default function App() {
   return (
-    <div id="app" className="flex flex-column">
+    <React.Fragment>
       <main>
         <NavBar />
         <Calendar />
@@ -23,6 +23,6 @@ export default function App() {
           </a>
         </div>
       </footer>
-    </div>
+    </React.Fragment>
   );
 }

@@ -1,5 +1,5 @@
 import { authStore } from './auth.store';
-import * as calService from './../calendar/calendar.service';
+import { calendarStore } from '../calendar/calendar.store';
 
 class ApiService {
   public readonly BASE_URL = 'https://api.monzo.com';
@@ -61,8 +61,8 @@ class ApiService {
   private getTransactions(): Promise<monzo.TransactionsResponse> {
     return this.get('/transactions', {
       account_id: this.accountId,
-      since: calService.getStartDate().toISOString(),
-      before: calService.getEndDate().toISOString(),
+      since: calendarStore.startDate.toISOString(),
+      before: calendarStore.endDate.toISOString(),
     });
   }
 

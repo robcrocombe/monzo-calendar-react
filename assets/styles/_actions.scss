@@ -1,5 +1,29 @@
-$categories: mondo general eating_out expenses transport cash bills entertainment shopping holidays groceries;
-$cat-colors: #4caf50 #607d8b #e91e63 #795548 #3f51b5 #009688 #03a9f4 #ff5722 #9c27b0 #673ab7 #f0b400;
+$categories:
+  mondo
+  general
+  eating_out
+  expenses
+  transport
+  cash
+  bills
+  entertainment
+  shopping
+  holidays
+  groceries
+  personal_care;
+$cat-colors:
+  #4caf50
+  #607d8b
+  #e91e63
+  #795548
+  #3f51b5
+  #009688
+  #03a9f4
+  #ff5722
+  #9c27b0
+  #673ab7
+  #f0b400
+  #0eb1a9;
 
 .calendar .tag {
   display: flex;

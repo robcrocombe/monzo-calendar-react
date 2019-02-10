@@ -2,6 +2,7 @@ import { createContext } from 'react';
 import { observable, computed, action } from 'mobx';
 import { apiService } from './api.service';
 import { formatCurrency } from '../common/utils';
+import { calendarStore } from '../calendar/calendar.store';
 
 class AccountStore {
   @observable public transactions: monzo.Transaction[];
@@ -50,6 +51,8 @@ class AccountStore {
           this.transactions = res.transactions;
           this.account = res.balance;
           this.loggedIn = true;
+
+          calendarStore.setPastActions(this.transactions);
         } else {
           this.loggedIn = false;
         }
