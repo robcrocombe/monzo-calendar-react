@@ -1,12 +1,13 @@
 import * as React from 'react';
 import NavBar from './common/nav-bar';
+import Calendar from './calendar/calendar';
 
 export default function App() {
   return (
     <div id="app" className="flex flex-column">
       <main>
         <NavBar />
-        {/* <Calendar /> */}
+        <Calendar />
       </main>
       <footer>
         <div className="has-text-centered">

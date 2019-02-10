@@ -1,0 +1,41 @@
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-auto-flow: row dense;
+  grid-gap: 0.8rem;
+  margin: 1rem;
+}
+
+.box-date {
+  position: relative;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  transition: box-shadow 0.15s ease-out;
+
+  & span:first-child {
+    margin-right: 0.063em;
+  }
+
+  &:hover .add-action-btn {
+    display: flex;
+  }
+
+  &:hover {
+    box-shadow:
+      0 4px 8px rgba(10, 10, 10, 0.15),
+      0 0 0 1px rgba(10, 10, 10, 0.15);
+  }
+}
+
+.button.add-action-btn {
+  display: none;
+  position: absolute;
+  top: 0.95rem;
+  right: 0.6rem;
+  padding-top: 3px;
+  font-weight: 700;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+}
