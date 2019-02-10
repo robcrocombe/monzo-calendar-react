@@ -12,7 +12,7 @@ Storage.prototype.getObject = function(key) {
   return value && JSON.parse(value);
 };
 
-ReactDOM.render(<App />, document.getElementById('app'));
+ReactDOM.render(<App />, document.getElementById('root'));
 
 // Hot Module Replacement
 if ((module as any).hot) {

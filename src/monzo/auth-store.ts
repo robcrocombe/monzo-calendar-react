@@ -2,7 +2,7 @@ import { createContext } from 'react';
 import { observable, computed, action } from 'mobx';
 
 class AuthStore {
-  @observable public readonly REDIRECT_URL = process.env.REDIRECT_URL;
+  public readonly REDIRECT_URL = process.env.REDIRECT_URL;
   @observable public CLIENT_ID = process.env.CLIENT_ID || localStorage.getItem('auth.clientId');
   @observable
   public CLIENT_SECRET = process.env.CLIENT_SECRET || localStorage.getItem('auth.clientSecret');
