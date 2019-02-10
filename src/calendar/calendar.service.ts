@@ -25,7 +25,7 @@ for (let m = startDate.clone(); m.isBefore(endDate); m.add(1, 'days')) {
   calendar.push(getDayObject(m, now, calendar.length));
 }
 
-export function getStartDate(now: moment.Moment): moment.Moment {
+export function getStartDate(now?: moment.Moment): moment.Moment {
   if (!now) return startDate;
 
   const startOfMonth = now.clone().startOf('month');
@@ -34,7 +34,7 @@ export function getStartDate(now: moment.Moment): moment.Moment {
     .subtract(startOfMonth.isoWeekday() - 1, 'days');
 }
 
-export function getEndDate(now: moment.Moment): moment.Moment {
+export function getEndDate(now?: moment.Moment): moment.Moment {
   if (!now) return endDate;
 
   const endOfMonth = now.clone().endOf('month');

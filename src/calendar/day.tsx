@@ -5,7 +5,7 @@ interface Props {
   addDisabled: boolean;
 }
 
-export default function Day(props: any) {
+export default function Day(props: Props) {
   // <past-action v-for="t in day.actions.past" :data="t"></past-action>
   // <planned-action v-for="t in day.actions.planned" :data="t"></planned-action>
 
