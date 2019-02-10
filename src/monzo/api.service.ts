@@ -1,25 +1,18 @@
-import { createContext } from 'react';
-import { observable, computed, action } from 'mobx';
-
-import { authStore } from './auth-store';
+import { authStore } from './auth.store';
 import * as calService from './../calendar/calendar.service';
-// import { events, Event } from './../events';
 
-class ApiStore {
+class ApiService {
   public readonly BASE_URL = 'https://api.monzo.com';
   public errored = false;
   public sessionToken: string;
   public accountId: string;
-  @observable public transactions: monzo.Transaction[];
-  @observable public balance: monzo.Balance;
-  @observable public loggedIn: boolean;
 
-  constructor() {
+  public initAccount(): Promise<monzo.InitResponse> {
     this.sessionToken = localStorage.getItem('session.token');
     this.accountId = localStorage.getItem('session.accountId');
 
     if (this.sessionToken && this.accountId) {
-      this.initData();
+      return this.initData();
     } else {
       const stateToken = localStorage.getItem('session.stateToken');
       const url = new URL(window.location.href);
@@ -38,7 +31,7 @@ class ApiStore {
           return;
         }
 
-        authStore
+        return authStore
           .getToken(code)
           .then(res => {
             this.sessionToken = res.access_token;
@@ -51,24 +44,18 @@ class ApiStore {
           })
           .then(() => this.initData());
       } else {
-        this.loggedIn = false;
+        return Promise.resolve(null);
       }
     }
   }
 
-  @action
-  public initData() {
-    this.loggedIn = true;
-    this.getTransactions()
-      .then(res => {
-        console.log(res);
-        this.transactions = res.transactions})
-      .catch(this.handleFetchError);
-    this.getBalance()
-      .then(res => {
-        console.log(res);
-        this.balance = res})
-      .catch(this.handleFetchError);
+  private initData(): Promise<monzo.InitResponse> {
+    return Promise.all([this.getTransactions(), this.getBalance()]).then(res => {
+      return {
+        transactions: res[0] && res[0].transactions,
+        balance: res[1],
+      };
+    });
   }
 
   private getTransactions(): Promise<monzo.TransactionsResponse> {
@@ -115,17 +102,6 @@ class ApiStore {
     });
   }
 
-  private handleFetchError(e: Dictionary<any> & Error) {
-    console.error(`${e.name}: ${e.message}`);
-
-    if (!this.errored && e.status === 401) {
-      this.errored = true;
-      this.loggedIn = false;
-      localStorage.removeItem('session.token');
-      localStorage.removeItem('session.accountId');
-    }
-  }
-
   private getQueryString(params: Dictionary<string>): string {
     const searchParams = new URLSearchParams();
     for (const prop in params) {
@@ -143,5 +119,4 @@ class ApiStore {
   }
 }
 
-export const apiStore = new ApiStore();
-export const ApiStoreContext = createContext(apiStore);
+export const apiService = new ApiService();

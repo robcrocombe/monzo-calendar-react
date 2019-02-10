@@ -37,6 +37,7 @@
     "autoprefixer": "9.4.7",
     "babel-polyfill": "6.26.0",
     "bulma": "0.6.2",
+    "currency-formatter": "1.5.3",
     "gh-pages": "2.0.1",
     "mobx": "5.9.0",
     "mobx-react-lite": "1.0.0",

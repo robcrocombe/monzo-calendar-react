@@ -11,6 +11,11 @@ declare namespace monzo {
     | 'holidays'
     | 'groceries';
 
+  interface InitResponse {
+    transactions: monzo.Transaction[];
+    balance: monzo.Balance;
+  }
+
   interface AccountResponse {
     accounts: Account[];
   }

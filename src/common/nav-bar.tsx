@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { observer } from 'mobx-react-lite';
-import { ApiStoreContext } from '../monzo/api-store';
-import { AuthStoreContext } from '../monzo/auth-store';
+import { AccountStoreContext } from '../monzo/account.store';
+import { AuthStoreContext } from '../monzo/auth.store';
 
 const NavBar = observer(() => {
-  const apiStore = React.useContext(ApiStoreContext);
-  const authStore = React.useContext(AuthStoreContext);
+  const accountStore = useContext(AccountStoreContext);
+  const authStore = useContext(AuthStoreContext);
   let loginButton: React.ReactElement<any>;
 
   function logout() {
@@ -13,13 +13,13 @@ const NavBar = observer(() => {
     window.location.reload();
   }
 
-  if (apiStore.loggedIn === true) {
+  if (accountStore.loggedIn === true) {
     loginButton = (
       <button type="button" className="button" onClick={logout}>
         Log out
       </button>
     );
-  } else if (apiStore.loggedIn === false) {
+  } else if (accountStore.loggedIn === false) {
     if (authStore.hasClientVars) {
       loginButton = (
         <a className="button is-primary" href={authStore.loginUrl}>
@@ -43,15 +43,25 @@ const NavBar = observer(() => {
       </div>
       <div className="navbar-item">
         Current Balance:&nbsp;
-        <span className="has-text-info">currentBalance</span>
+        <span className="has-text-info">{accountStore.currentBalance}</span>
       </div>
       <div className="navbar-item">
         Planned Balance:&nbsp;
-        <span className="has-text-info">plannedBalance</span>
+        <span className="has-text-info">{accountStore.plannedBalance}</span>
       </div>
       <div className="navbar-item" title="Profit/Loss">
         P/L:&nbsp;
-        <span>diff</span>
+        <span
+          className={
+            accountStore.diffAmount > 0
+              ? 'has-text-success'
+              : accountStore.diffAmount < 0
+              ? 'has-text-danger'
+              : null
+          }
+        >
+          {accountStore.diffBalance}
+        </span>
       </div>
       <div className="navbar-end">
         <div className="navbar-item">{loginButton}</div>
