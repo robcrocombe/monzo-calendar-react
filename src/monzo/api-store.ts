@@ -1,128 +1,147 @@
+import { createContext } from 'react';
+import { observable, computed, action } from 'mobx';
+
 import { authStore } from './auth-store';
 import * as calService from './../calendar/calendar.service';
 // import { events, Event } from './../events';
 
-const BASE_URL: string = 'https://api.monzo.com';
-let sessionToken: string;
-let accountId: string;
-let errored: boolean = false;
+class ApiStore {
+  public readonly BASE_URL = 'https://api.monzo.com';
+  public errored = false;
+  public sessionToken: string;
+  public accountId: string;
+  @observable public transactions: monzo.Transaction[];
+  @observable public balance: monzo.Balance;
+  @observable public loggedIn: boolean;
 
-export function init() {
-  sessionToken = localStorage.getItem('session.token');
-  accountId = localStorage.getItem('session.accountId');
+  constructor() {
+    this.sessionToken = localStorage.getItem('session.token');
+    this.accountId = localStorage.getItem('session.accountId');
 
-  if (sessionToken && accountId) {
-    initData();
-  } else {
-    const stateToken = localStorage.getItem('session.stateToken');
-    const url = new URL(window.location.href);
-    const code = url.searchParams.get('code');
-    const state = url.searchParams.get('state');
+    if (this.sessionToken && this.accountId) {
+      this.initData();
+    } else {
+      const stateToken = localStorage.getItem('session.stateToken');
+      const url = new URL(window.location.href);
+      const code = url.searchParams.get('code');
+      const state = url.searchParams.get('state');
 
-    clearStorageAfterLogin();
+      console.log(stateToken, code, state);
 
-    if (code && state && stateToken) {
-      window.history.replaceState({}, document.title, '/');
+      this.clearStorageAfterLogin();
 
-      if (state !== stateToken) {
-        console.error(`State parameter '${state}' does not match '${stateToken}'`);
-        return;
+      if (code && state && stateToken) {
+        window.history.replaceState({}, document.title, '/');
+
+        if (state !== stateToken) {
+          console.error(`State parameter '${state}' does not match '${stateToken}'`);
+          return;
+        }
+
+        authStore
+          .getToken(code)
+          .then(res => {
+            this.sessionToken = res.access_token;
+            localStorage.setItem('session.token', this.sessionToken);
+          })
+          .then(() => this.getAccountId())
+          .then(res => {
+            this.accountId = res.accounts[0].id;
+            localStorage.setItem('session.accountId', this.accountId);
+          })
+          .then(() => this.initData());
+      } else {
+        this.loggedIn = false;
+      }
+    }
+  }
+
+  @action
+  public initData() {
+    this.loggedIn = true;
+    this.getTransactions()
+      .then(res => {
+        console.log(res);
+        this.transactions = res.transactions})
+      .catch(this.handleFetchError);
+    this.getBalance()
+      .then(res => {
+        console.log(res);
+        this.balance = res})
+      .catch(this.handleFetchError);
+  }
+
+  private getTransactions(): Promise<monzo.TransactionsResponse> {
+    return this.get('/transactions', {
+      account_id: this.accountId,
+      since: calService.getStartDate().toISOString(),
+      before: calService.getEndDate().toISOString(),
+    });
+  }
+
+  private getBalance(): Promise<monzo.Balance> {
+    return this.get('/balance', {
+      account_id: this.accountId,
+    });
+  }
+
+  private getAccountId(): Promise<monzo.AccountResponse> {
+    return this.get('/accounts', {
+      account_type: 'uk_retail',
+    });
+  }
+
+  private get<T = any>(url: string, params: Dictionary<string>): Promise<T> {
+    if (params) {
+      url += '?' + this.getQueryString(params);
+    }
+
+    return fetch(this.BASE_URL + url, {
+      method: 'GET',
+      headers: {
+        authorization: `Bearer ${this.sessionToken}`,
+      },
+    }).then(async res => {
+      const body = await res.json();
+
+      if (res.ok) {
+        return body;
       }
 
-      authStore
-        .getToken(code)
-        .then(res => {
-          sessionToken = res.access_token;
-          localStorage.setItem('session.token', sessionToken);
-        })
-        .then(getAccountId)
-        .then(res => {
-          accountId = res.accounts[0].id;
-          localStorage.setItem('session.accountId', accountId);
-        })
-        .then(initData);
-    } else {
-      // events.$emit(Event.LOGGED_OUT);
-    }
-  }
-}
-
-function initData() {
-  getTransactions()
-    // .then(res => events.$emit(Event.TRANS_LOADED, res.transactions))
-    .catch(handleFetchError);
-  getBalance()
-    // .then(res => events.$emit(Event.BALANCE_LOADED, res))
-    .catch(handleFetchError);
-}
-
-function getAccountId() {
-  return get('/accounts', {
-    account_type: 'uk_retail',
-  });
-}
-
-function getTransactions() {
-  return get('/transactions', {
-    account_id: accountId,
-    since: calService.getStartDate().toISOString(),
-    before: calService.getEndDate().toISOString(),
-  });
-}
-
-function getBalance() {
-  return get('/balance', {
-    account_id: accountId,
-  });
-}
-
-function get<T = any>(url: string, params: Dictionary<string>): Promise<T> {
-  if (params) {
-    url += '?' + getQueryString(params);
+      const err = new Error();
+      err.name = body.code || res.status;
+      err.message = body.message || res.statusText;
+      throw err;
+    });
   }
 
-  return fetch(BASE_URL + url, {
-    method: 'GET',
-    headers: {
-      authorization: `Bearer ${sessionToken}`,
-    },
-  }).then(async res => {
-    const body = await res.json();
+  private handleFetchError(e: Dictionary<any> & Error) {
+    console.error(`${e.name}: ${e.message}`);
 
-    if (res.ok) {
-      return body;
+    if (!this.errored && e.status === 401) {
+      this.errored = true;
+      this.loggedIn = false;
+      localStorage.removeItem('session.token');
+      localStorage.removeItem('session.accountId');
     }
+  }
 
-    const err = new Error();
-    err.name = body.code || res.status;
-    err.message = body.message || res.statusText;
-    throw err;
-  });
-}
+  private getQueryString(params: Dictionary<string>): string {
+    const searchParams = new URLSearchParams();
+    for (const prop in params) {
+      searchParams.set(prop, params[prop]);
+    }
+    return searchParams.toString();
+  }
 
-function handleFetchError(e: Dictionary<any> & Error) {
-  console.error(`${e.name}: ${e.message}`);
-
-  if (!errored && e.status === 401) {
-    errored = true;
+  private clearStorageAfterLogin() {
     localStorage.removeItem('session.token');
     localStorage.removeItem('session.accountId');
-    // events.$emit(Event.LOGGED_OUT);
+    localStorage.removeItem('session.stateToken');
+    localStorage.removeItem('auth.clientId');
+    localStorage.removeItem('auth.clientSecret');
   }
 }
 
-function getQueryString(params: Dictionary<string>): string {
-  const searchParams = new URLSearchParams();
-  for (const prop in params) {
-    searchParams.set(prop, params[prop]);
-  }
-  return searchParams.toString();
-}
-
-function clearStorageAfterLogin() {
-  localStorage.removeItem('session.token');
-  localStorage.removeItem('session.accountId');
-  localStorage.removeItem('session.stateToken');
-  localStorage.removeItem('auth.clientId');
-  localStorage.removeItem('auth.clientSecret');
-}
+export const apiStore = new ApiStore();
+export const ApiStoreContext = createContext(apiStore);

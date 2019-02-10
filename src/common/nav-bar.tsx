@@ -1,30 +1,39 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { observer } from 'mobx-react-lite';
+import { ApiStoreContext } from '../monzo/api-store';
+import { AuthStoreContext } from '../monzo/auth-store';
 
-export default function NavBar() {
-  const [showLoginButton, setShowLoginButton] = useState(true);
-  const [hasClientVars, setHasClientVars] = useState(false);
-  let loginButton: React.ReactNode;
+const NavBar = observer(() => {
+  const apiStore = React.useContext(ApiStoreContext);
+  const authStore = React.useContext(AuthStoreContext);
+  let loginButton: React.ReactElement<any>;
 
-  if (showLoginButton) {
-    if (hasClientVars) {
+  function logout() {
+    window.localStorage.clear();
+    window.location.reload();
+  }
+
+  if (apiStore.loggedIn === true) {
+    loginButton = (
+      <button type="button" className="button" onClick={logout}>
+        Log out
+      </button>
+    );
+  } else if (apiStore.loggedIn === false) {
+    if (authStore.hasClientVars) {
       loginButton = (
-        <a className="button is-primary" href="monzoLoginUrl">
+        <a className="button is-primary" href={authStore.loginUrl}>
           Login with Monzo
         </a>
       );
     } else {
+      // Show Monzo vars modal
       loginButton = (
         <button type="button" className="button is-primary">
           Login with Monzo
         </button>
       );
     }
-  } else {
-    loginButton = (
-      <button type="button" className="button">
-        Log out
-      </button>
-    );
   }
 
   return (
@@ -59,4 +68,6 @@ export default function NavBar() {
       </logout-modal>*/}
     </nav>
   );
-}
+});
+
+export default NavBar;

@@ -70,4 +70,4 @@ class AuthStore {
 }
 
 export const authStore = new AuthStore();
-export const context = createContext(authStore);
+export const AuthStoreContext = createContext(authStore);

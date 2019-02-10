@@ -39,6 +39,7 @@
     "bulma": "0.7.4",
     "gh-pages": "2.0.1",
     "mobx": "5.9.0",
+    "mobx-react-lite": "1.0.0",
     "moment": "2.24.0",
     "node-sass": "4.11.0",
     "parcel": "1.11.0",
