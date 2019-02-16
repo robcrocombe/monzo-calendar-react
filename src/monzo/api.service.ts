@@ -12,14 +12,12 @@ class ApiService {
     this.accountId = localStorage.getItem('session.accountId');
 
     if (this.sessionToken && this.accountId) {
-      return this.initData();
+      return this.populateData();
     } else {
       const stateToken = localStorage.getItem('session.stateToken');
       const url = new URL(window.location.href);
       const code = url.searchParams.get('code');
       const state = url.searchParams.get('state');
-
-      console.log(stateToken, code, state);
 
       this.clearStorageAfterLogin();
 
@@ -28,7 +26,7 @@ class ApiService {
 
         if (state !== stateToken) {
           console.error(`State parameter '${state}' does not match '${stateToken}'`);
-          return;
+          return Promise.resolve(null);
         }
 
         return authStore
@@ -42,20 +40,20 @@ class ApiService {
             this.accountId = res.accounts[0].id;
             localStorage.setItem('session.accountId', this.accountId);
           })
-          .then(() => this.initData());
+          .then(() => this.populateData());
       } else {
         return Promise.resolve(null);
       }
     }
   }
 
-  private initData(): Promise<monzo.InitResponse> {
-    return Promise.all([this.getTransactions(), this.getBalance()]).then(res => {
-      return {
-        transactions: res[0] && res[0].transactions,
-        balance: res[1],
-      };
-    });
+  private async populateData(): Promise<monzo.InitResponse> {
+    const res = await Promise.all([this.getTransactions(), this.getBalance()]);
+
+    return {
+      transactions: res[0] && res[0].transactions,
+      balance: res[1],
+    };
   }
 
   private getTransactions(): Promise<monzo.TransactionsResponse> {
@@ -95,9 +93,10 @@ class ApiService {
         return body;
       }
 
-      const err = new Error();
+      const err = new FetchError();
       err.name = body.code || res.status;
       err.message = body.message || res.statusText;
+      err.status = res.status;
       throw err;
     });
   }
@@ -117,6 +116,10 @@ class ApiService {
     localStorage.removeItem('auth.clientId');
     localStorage.removeItem('auth.clientSecret');
   }
+}
+
+export class FetchError extends Error {
+  public status: number;
 }
 
 export const apiService = new ApiService();

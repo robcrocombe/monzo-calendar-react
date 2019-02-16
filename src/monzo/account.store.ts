@@ -17,7 +17,7 @@ class AccountStore {
   @computed
   public get currentBalance() {
     if (this.account) {
-      return formatCurrency(this.account.balance, this.account.currency)
+      return formatCurrency(this.account.balance, this.account.currency);
     }
   }
 
@@ -43,29 +43,27 @@ class AccountStore {
   }
 
   @action
-  private init() {
-    apiService
-      .initAccount()
-      .then(res => {
-        if (res) {
-          this.transactions = res.transactions;
-          this.account = res.balance;
-          this.loggedIn = true;
+  private async init() {
+    try {
+      const res = await apiService.initAccount();
 
-          calendarStore.setPastActions(this.transactions);
-        } else {
-          this.loggedIn = false;
-        }
-      })
-      .catch(e => {
-        console.error(`${e.name}: ${e.message}`);
+      if (res) {
+        this.transactions = res.transactions;
+        this.account = res.balance;
+        this.loggedIn = true;
+        calendarStore.setPastActions(this.transactions);
+      } else {
+        this.loggedIn = false;
+      }
+    } catch (e) {
+      console.error(`${e.name}: ${e.message}`);
 
-        if (e.status === 401) {
-          this.loggedIn = false;
-          localStorage.removeItem('session.token');
-          localStorage.removeItem('session.accountId');
-        }
-      });
+      if (e.status < 500) {
+        this.loggedIn = false;
+        localStorage.removeItem('session.token');
+        localStorage.removeItem('session.accountId');
+      }
+    }
   }
 }
 

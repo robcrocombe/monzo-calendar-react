@@ -15,7 +15,7 @@ export const WEEKDAYS = [
 class CalendarStore {
   @observable public startDate: moment.Moment;
   @observable public endDate: moment.Moment;
-  @observable public calendar: calendar.Date[] = [];
+  @observable public calendar: calendar.Date[];
   @observable public todayIndex: number;
   public offsetMonth: number = 0;
   private readonly now = moment();
@@ -52,6 +52,17 @@ class CalendarStore {
     }
   }
 
+  @action
+  private init() {
+    this.startDate = this.getStartDate();
+    this.endDate = this.getEndDate();
+    this.calendar = [];
+
+    for (let m = this.startDate.clone(); m.isBefore(this.endDate); m.add(1, 'days')) {
+      this.calendar.push(this.newDayObject(m, this.now, this.calendar.length));
+    }
+  }
+
   private findDayIndex(date: moment.MomentInput, offset: number): number {
     const momentDate = moment(date);
 
@@ -61,16 +72,6 @@ class CalendarStore {
       }
     }
     return 0;
-  }
-
-  @action
-  private init() {
-    this.startDate = this.getStartDate();
-    this.endDate = this.getEndDate();
-
-    for (let m = this.startDate.clone(); m.isBefore(this.endDate); m.add(1, 'days')) {
-      this.calendar.push(this.newDayObject(m, this.now, this.calendar.length));
-    }
   }
 
   private getStartDate(): moment.Moment {
