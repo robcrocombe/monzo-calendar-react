@@ -9,7 +9,7 @@ export default function App() {
         <NavBar />
         <Calendar />
       </main>
-      <footer>
+      <footer id="page-footer">
         <div className="has-text-centered">
           <a
             id="gh-link"

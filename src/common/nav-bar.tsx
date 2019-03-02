@@ -1,21 +1,25 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { observer } from 'mobx-react-lite';
 import { AccountStoreContext } from '../monzo/account.store';
 import { AuthStoreContext } from '../monzo/auth.store';
+import { LogoutModal } from './logout-modal';
 
 const NavBar = observer(() => {
   const accountStore = useContext(AccountStoreContext);
   const authStore = useContext(AuthStoreContext);
   let loginButton: React.ReactElement<any>;
 
+  const [ showLogoutModal, setShowLogoutModal ] = useState(false);
+  const closeLogoutModal = () => setShowLogoutModal(false);
+
   function logout() {
-    window.localStorage.clear();
+    // window.localStorage.clear();
     window.location.reload();
   }
 
   if (accountStore.loggedIn === true) {
     loginButton = (
-      <button type="button" className="button" onClick={logout}>
+      <button type="button" className="button" onClick={() => setShowLogoutModal(true)}>
         Log out
       </button>
     );
@@ -66,16 +70,16 @@ const NavBar = observer(() => {
       <div className="navbar-end">
         <div className="navbar-item">{loginButton}</div>
       </div>
+      <LogoutModal
+        visible={showLogoutModal}
+        close={closeLogoutModal}
+        submit={logout}
+      />
       {/*<auth-modal
         :visible="showAuthModal"
         @close="closeAuthModal"
         @submit="saveClientVars">
-      </auth-modal>
-      <logout-modal
-        :visible="showLogoutModal"
-        @close="closeLogoutModal"
-        @submit="logout">
-      </logout-modal>*/}
+      </auth-modal>*/}
     </nav>
   );
 });

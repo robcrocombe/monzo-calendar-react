@@ -8,13 +8,13 @@ main {
   flex: 1 0 auto;
 }
 
-footer {
-  margin: 2rem;
-  flex-shrink: 0;
-}
-
 code {
   border-radius: 2px;
+}
+
+#page-footer {
+  margin: 2rem;
+  flex-shrink: 0;
 }
 
 #gh-link {

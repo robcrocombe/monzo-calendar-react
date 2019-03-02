@@ -1,4 +1,4 @@
-export const categories = [
+export const categories: monzo.ActionCategory[] = [
   { value: 'bills', label: 'Bills' },
   { value: 'cash', label: 'Cash out' },
   { value: 'eating_out', label: 'Eating out' },
@@ -13,3 +13,11 @@ export const categories = [
   { value: 'personal_care', label: 'Personal Care' },
   { value: 'family', label: 'Family' },
 ];
+
+export const categoryDict = categories.reduce<{ [key in monzo.Category]: string }>(
+  (obj, item) => {
+    obj[item.value] = item.label;
+    return obj;
+  },
+  {} as any
+);

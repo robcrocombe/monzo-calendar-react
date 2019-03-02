@@ -1,6 +1,7 @@
 declare namespace monzo {
   type Category =
     | 'general'
+    | 'mondo'
     | 'eating_out'
     | 'expenses'
     | 'transport'
@@ -51,5 +52,10 @@ declare namespace monzo {
     settled?: string;
     updated?: string;
     debit?: boolean;
+  }
+
+  interface ActionCategory {
+    value: Category;
+    label: string;
   }
 }
