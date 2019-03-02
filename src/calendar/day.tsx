@@ -5,13 +5,12 @@ import PastAction from './past-action';
 interface Props {
   day: calendar.Date;
   addDisabled: boolean;
+  openActionModal: () => void;
 }
 
 const Day = observer((props: Props) => {
   // <past-action v-for="t in day.actions.past" :data="t"></past-action>
   // <planned-action v-for="t in day.actions.planned" :data="t"></planned-action>
-
-  function newAction() {}
 
   function title() {
     if (props.day.date.date() === 1) {
@@ -25,7 +24,7 @@ const Day = observer((props: Props) => {
   if (props.day.isFuture) {
     addActionBtn = (
       <button
-        onClick={newAction}
+        onClick={props.openActionModal}
         disabled={props.addDisabled}
         type="button"
         title="Plan a transaction"

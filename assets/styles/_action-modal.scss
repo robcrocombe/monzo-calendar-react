@@ -1,3 +1,17 @@
 .model-custom-date .popover-origin {
   margin-bottom: 2rem;
 }
+
+.action-type-control {
+  margin-top: 0.8rem;
+
+  input {
+    position: relative;
+    bottom: 2px;
+    margin-right: 0.375rem;
+  }
+
+  .radio + .radio {
+    margin-left: 1.5rem;
+  }
+}

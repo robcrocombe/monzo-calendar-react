@@ -9,8 +9,8 @@ const NavBar = observer(() => {
   const authStore = useContext(AuthStoreContext);
   let loginButton: React.ReactElement<any>;
 
-  const [ showLogoutModal, setShowLogoutModal ] = useState(false);
-  const closeLogoutModal = () => setShowLogoutModal(false);
+  const [ showLogoutModal, toggleLogoutModal ] = useState(false);
+  const closeLogoutModal = () => toggleLogoutModal(false);
 
   function logout() {
     // window.localStorage.clear();
@@ -19,7 +19,7 @@ const NavBar = observer(() => {
 
   if (accountStore.loggedIn === true) {
     loginButton = (
-      <button type="button" className="button" onClick={() => setShowLogoutModal(true)}>
+      <button type="button" className="button" onClick={() => toggleLogoutModal(true)}>
         Log out
       </button>
     );
