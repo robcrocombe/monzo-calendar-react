@@ -5,7 +5,7 @@ import { ActionModal } from '../action/action-modal';
 
 export default function Calendar() {
   const calStore = useContext(CalendarStoreContext);
-  const [actionModalOpen, toggleActionModal] = useState(false);
+  const [actionModalOpen, toggleActionModal] = useState(true);
 
   const headers = WEEKDAYS.map(day => <div key={day}>{day}</div>);
   const days = calStore.calendar.map(day => (

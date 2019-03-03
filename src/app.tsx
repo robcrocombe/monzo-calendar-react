@@ -14,11 +14,11 @@ export default function App() {
           <a
             id="gh-link"
             className="button is-white"
-            href="https://github.com/robcrocombe/monzo-calendar"
+            href="https://github.com/robcrocombe/monzo-calendar-react"
             target="_blank"
           >
             <span className="has-text-grey">
-              github.com/robcrocombe/<strong>monzo-calendar</strong>
+              github.com/robcrocombe/<strong>monzo-calendar-react</strong>
             </span>
           </a>
         </div>

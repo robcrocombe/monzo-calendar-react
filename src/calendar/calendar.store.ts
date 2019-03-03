@@ -17,8 +17,8 @@ class CalendarStore {
   @observable public endDate: moment.Moment;
   @observable public calendar: calendar.Date[];
   @observable public todayIndex: number;
-  public offsetMonth: number = 0;
-  private readonly now = moment();
+  public offsetMonth: number = 1;
+  public readonly now = moment().subtract(this.offsetMonth, 'month');
 
   constructor() {
     this.init();
@@ -76,14 +76,12 @@ class CalendarStore {
 
   private getStartDate(): moment.Moment {
     const startOfMonth = this.now.clone().startOf('month');
-    return startOfMonth
-      .subtract(this.offsetMonth, 'month')
-      .subtract(startOfMonth.isoWeekday() - 1, 'days');
+    return startOfMonth.subtract(startOfMonth.isoWeekday() - 1, 'days');
   }
 
   private getEndDate(): moment.Moment {
     const endOfMonth = this.now.clone().endOf('month');
-    return endOfMonth.subtract(this.offsetMonth, 'month').add(7 - endOfMonth.isoWeekday(), 'days');
+    return endOfMonth.add(7 - endOfMonth.isoWeekday(), 'days');
   }
 
   private newDayObject(day: moment.Moment, now: moment.Moment, index: number): calendar.Date {

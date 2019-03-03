@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Modal } from '../common/modal';
 import { categories } from './action.service';
+import DatePicker from './date-picker';
 
 interface Props {
   open: boolean;
@@ -22,7 +23,7 @@ export function ActionModal(props: Props) {
   }, [props.open]);
 
   useEffect(() => {
-    props.open && nameField.current.focus();
+    // props.open && nameField.current.focus();
   }, [visible]);
 
   function handleChange(event: React.FormEvent<HTMLInputElement | HTMLSelectElement>) {
@@ -122,6 +123,10 @@ export function ActionModal(props: Props) {
             onChange={handleChange}
           />
         </div>
+      </div>
+      <div className="mt2 mb1">
+        <label className="label">Select dates</label>
+        <DatePicker></DatePicker>
       </div>
     </div>
   );
