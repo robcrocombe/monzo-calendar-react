@@ -24,6 +24,10 @@ export default function DatePicker(props: Props) {
   }, [selected]);
 
   function selectDate(e: React.MouseEvent, day: calendar.Date) {
+    if (!day.isCurrentMonth) {
+      return;
+    }
+
     if (e.shiftKey && lastSelected && lastSelected !== day) {
       // Select multiple between two dates if click then shift+click
       const index1 = calStore.calendar.indexOf(lastSelected);
@@ -33,7 +37,7 @@ export default function DatePicker(props: Props) {
       setSelected(
         calStore.calendar.filter(
           (d, i) =>
-            d.date.isSame(calStore.now, 'month') &&
+            d.isCurrentMonth &&
             ((i >= fromIndex && i <= toIndex) || selected.indexOf(d) !== -1)
         )
       );
@@ -59,7 +63,7 @@ export default function DatePicker(props: Props) {
 
     setSelected(
       calStore.calendar.filter(
-        d => d.date.isSame(calStore.now, 'month') && dates.indexOf(d.date.date()) !== -1
+        d => d.isCurrentMonth && dates.indexOf(d.date.date()) !== -1
       )
     );
   }
