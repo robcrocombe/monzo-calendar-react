@@ -4,8 +4,8 @@ import { categories } from './action.service';
 import DatePicker from './date-picker';
 
 interface Props {
-  open: boolean;
-  toggleOpen: (open: boolean) => void;
+  open: calendar.Date;
+  toggleOpen: (open: calendar.Date) => void;
 }
 
 export function ActionModal(props: Props) {
@@ -19,11 +19,12 @@ export function ActionModal(props: Props) {
   }, [form]);
 
   useEffect(() => {
-    setVisibility(props.open);
+    setVisibility(!!props.open);
+    setForm({...form, dates: props.open && [props.open]});
   }, [props.open]);
 
   useEffect(() => {
-    // props.open && nameField.current.focus();
+    props.open && nameField.current.focus();
   }, [visible]);
 
   function handleChange(event: React.FormEvent<HTMLInputElement | HTMLSelectElement>) {
@@ -45,7 +46,7 @@ export function ActionModal(props: Props) {
   }
 
   function close() {
-    props.toggleOpen(false);
+    props.toggleOpen(null);
     setForm(defaultFormData());
   }
 
@@ -130,7 +131,7 @@ export function ActionModal(props: Props) {
       </div>
       <div className="mt2 mb1">
         <label className="label">Select dates</label>
-        <DatePicker initialDates={form.dates} selectionChanged={datesChanged} />
+        {form.dates && <DatePicker initialDates={form.dates} selectionChanged={datesChanged} />}
       </div>
     </div>
   );
@@ -163,6 +164,6 @@ function defaultFormData() {
     category: 'general',
     type: 'debit',
     amount: 0,
-    dates: [],
+    dates: [] as calendar.Date[],
   };
 }
