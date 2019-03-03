@@ -2,10 +2,16 @@ import React, { useContext, useState, useEffect } from 'react';
 import classNames from 'classnames';
 import { WEEKDAYS, CalendarStoreContext } from '../calendar/calendar.store';
 
-export default function DatePicker() {
+interface Props {
+  initialDates: calendar.Date[];
+  selectionChanged: (dates: calendar.Date[]) => void;
+}
+
+export default function DatePicker(props: Props) {
   const calStore = useContext(CalendarStoreContext);
-  const [selected, setSelected] = useState<calendar.Date[]>([]);
+  const [selected, setSelected] = useState<calendar.Date[]>(props.initialDates);
   const [inputText, setInputText] = useState('');
+  const [lastSelected, setLastSelected] = useState<calendar.Date>(null);
 
   useEffect(() => {
     const text = selected
@@ -13,12 +19,29 @@ export default function DatePicker() {
       .sort((a, b) => a - b)
       .join(', ');
     setInputText(text);
+
+    props.selectionChanged(selected);
   }, [selected]);
 
-  function selectDate(day: calendar.Date) {
-    if (selected.indexOf(day) === -1) {
+  function selectDate(e: React.MouseEvent, day: calendar.Date) {
+    if (e.shiftKey && lastSelected && lastSelected !== day) {
+      // Select multiple between two dates if click then shift+click
+      const index1 = calStore.calendar.indexOf(lastSelected);
+      const index2 = calStore.calendar.indexOf(day);
+      const [fromIndex, toIndex] = index1 < index2 ? [index1, index2] : [index2, index1];
+
+      setSelected(
+        calStore.calendar.filter(
+          (d, i) =>
+            d.date.isSame(calStore.now, 'month') &&
+            ((i >= fromIndex && i <= toIndex) || selected.indexOf(d) !== -1)
+        )
+      );
+    } else if (selected.indexOf(day) === -1) {
+      setLastSelected(day);
       setSelected([...selected, day]);
     } else {
+      setLastSelected(null);
       setSelected(selected.filter(d => d !== day));
     }
   }
@@ -53,7 +76,7 @@ export default function DatePicker() {
           selected: selected.indexOf(day) > -1,
           muted: !day.isCurrentMonth,
         })}
-        onClick={() => selectDate(day)}
+        onClick={e => selectDate(e, day)}
       >
         {day.date.format('D')}
       </div>
@@ -63,7 +86,7 @@ export default function DatePicker() {
   return (
     <div className="date-picker">
       <input
-        type="text"
+        type="search"
         placeholder="1, 2, 31, ..."
         className="input truncate"
         style={{ width: '274px' }}

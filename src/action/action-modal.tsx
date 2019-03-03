@@ -15,7 +15,7 @@ export function ActionModal(props: Props) {
   const [form, setForm] = useState(defaultFormData());
 
   useEffect(() => {
-    setInvalidForm(!(form.name.trim() && form.amount && form.amount > 0));
+    setInvalidForm(!(form.name.trim() && form.amount && form.amount > 0 && form.dates.length));
   }, [form]);
 
   useEffect(() => {
@@ -34,6 +34,10 @@ export function ActionModal(props: Props) {
       ...form,
       [name]: value,
     });
+  }
+
+  function datesChanged(dates: calendar.Date[]) {
+    setForm({ ...form, dates });
   }
 
   function save() {
@@ -126,7 +130,7 @@ export function ActionModal(props: Props) {
       </div>
       <div className="mt2 mb1">
         <label className="label">Select dates</label>
-        <DatePicker></DatePicker>
+        <DatePicker initialDates={form.dates} selectionChanged={datesChanged} />
       </div>
     </div>
   );
@@ -159,5 +163,6 @@ function defaultFormData() {
     category: 'general',
     type: 'debit',
     amount: 0,
+    dates: [],
   };
 }
