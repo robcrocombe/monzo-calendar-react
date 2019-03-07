@@ -10,5 +10,11 @@
     "target": "es5",
     "experimentalDecorators": true,
     "noEmit": true
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    ".cache",
+    ".vscode"
+  ]
 }

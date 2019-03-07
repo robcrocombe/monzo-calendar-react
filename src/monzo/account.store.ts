@@ -1,11 +1,13 @@
+import moment from 'moment';
 import { createContext } from 'react';
 import { observable, computed, action } from 'mobx';
 import { apiService } from './api.service';
 import { formatCurrency } from '../common/utils';
-import { calendarStore } from '../calendar/calendar.store';
+// import { calendarStore } from '../calendar/calendar.store';
 
 class AccountStore {
-  @observable public transactions: monzo.Transaction[];
+  @observable public transactions: Dictionary<monzo.Transaction[]> = {};
+  @observable public plannedTransactions: Dictionary<monzo.PlannedTransaction[]> = {};
   @observable public account: monzo.Balance;
   @observable public loggedIn: boolean;
   @observable public newBalance: number;
@@ -43,15 +45,29 @@ class AccountStore {
   }
 
   @action
+  public addPlannedTransaction(action: monzo.TransactionForm) {
+    const newAction = { ...action, currency: 'GBP' };
+    delete newAction.dates;
+
+    for (let i = 0; i < action.dates.length; ++i) {
+      const id = action.dates[i].date.unix();
+
+      if (!this.plannedTransactions[id]) {
+        this.plannedTransactions[id] = [];
+      }
+      this.plannedTransactions[id].push(newAction);
+    }
+  }
+
+  @action
   private async init() {
     try {
       const res = await apiService.initAccount();
 
       if (res) {
-        this.transactions = res.transactions;
+        this.setTransactions(res.transactions);
         this.account = res.balance;
         this.loggedIn = true;
-        calendarStore.setPastActions(this.transactions);
       } else {
         this.loggedIn = false;
       }
@@ -63,6 +79,21 @@ class AccountStore {
         localStorage.removeItem('session.token');
         localStorage.removeItem('session.accountId');
       }
+    }
+  }
+
+  @action
+  private setTransactions(list: monzo.Transaction[]) {
+    for (let i = 0; i < list.length; ++i) {
+      const action = list[i];
+      const id = moment(action.created)
+        .startOf('day')
+        .unix();
+
+      if (!this.transactions[id]) {
+        this.transactions[id] = [];
+      }
+      this.transactions[id].push(action);
     }
   }
 }

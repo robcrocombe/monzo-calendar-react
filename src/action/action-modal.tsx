@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Modal } from '../common/modal';
-import { categories } from './action.service';
+import { categories } from './action-utils';
 import DatePicker from './date-picker';
+import { AccountStoreContext } from '../monzo/account.store';
 
 interface Props {
   open: calendar.Date;
@@ -9,6 +10,8 @@ interface Props {
 }
 
 export function ActionModal(props: Props) {
+  const accountStore = useContext(AccountStoreContext);
+
   const [visible, setVisibility] = useState(false);
   const [invalidForm, setInvalidForm] = useState(true);
   const nameField = useRef<HTMLInputElement>(null);
@@ -42,7 +45,8 @@ export function ActionModal(props: Props) {
   }
 
   function save() {
-    alert(JSON.stringify(form));
+    accountStore.addPlannedTransaction(form);
+    close();
   }
 
   function close() {
@@ -158,7 +162,7 @@ export function ActionModal(props: Props) {
   );
 }
 
-function defaultFormData() {
+function defaultFormData(): monzo.TransactionForm {
   return {
     name: '',
     category: 'general',

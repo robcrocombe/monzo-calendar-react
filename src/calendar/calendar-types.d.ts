@@ -7,11 +7,5 @@ declare namespace calendar {
     isWeekend: boolean;
     isFuture: boolean;
     weekDay: number;
-    actions: Transactions;
-  }
-
-  interface Transactions {
-    past: monzo.Transaction[];
-    planned: monzo.Transaction[];
   }
 }

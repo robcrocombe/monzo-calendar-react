@@ -1,6 +1,6 @@
 import React from 'react';
 import { formatCurrency } from '../common/utils';
-import { categoryDict } from '../action/action.service';
+import { categoryDict } from '../action/action-utils';
 
 interface Props {
   data: monzo.Transaction;

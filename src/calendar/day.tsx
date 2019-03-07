@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
 import { observer } from 'mobx-react-lite';
 import PastAction from './past-action';
+import { AccountStoreContext } from '../monzo/account.store';
+import PlannedAction from './planned-action';
 
 interface Props {
   day: calendar.Date;
@@ -9,6 +11,7 @@ interface Props {
 }
 
 const Day = observer((props: Props) => {
+  const accountStore = useContext(AccountStoreContext);
   // <past-action v-for="t in day.actions.past" :data="t"></past-action>
   // <planned-action v-for="t in day.actions.planned" :data="t"></planned-action>
 
@@ -35,13 +38,19 @@ const Day = observer((props: Props) => {
     );
   }
 
-  const pastActions = props.day.actions.past.map(t => <PastAction key={t.id} data={t} />);
+  const dayId = props.day.date.unix();
+  const transactions = accountStore.transactions[dayId] || [];
+  const plannedTransactions = accountStore.plannedTransactions[dayId] || [];
+
+  const pastActions = transactions.map(t => <PastAction key={t.id} data={t} />);
+  const plannedActions = plannedTransactions.map((t, i) => <PlannedAction key={i} data={t} />);
 
   return (
     <div className="box box-date">
       <span className={props.day.isToday ? 'has-text-weight-bold' : ''}>{title()}</span>
       {addActionBtn}
       <div>{pastActions}</div>
+      <div>{plannedActions}</div>
     </div>
   );
 });

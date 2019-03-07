@@ -1,4 +1,5 @@
 declare namespace monzo {
+  type TransactionType = 'debit' | 'credit';
   type Category =
     | 'general'
     | 'mondo'
@@ -57,5 +58,17 @@ declare namespace monzo {
   interface ActionCategory {
     value: Category;
     label: string;
+  }
+
+  interface PlannedTransaction {
+    name: string;
+    category: Category;
+    type: TransactionType;
+    amount: number;
+    currency?: string;
+  }
+
+  interface TransactionForm extends PlannedTransaction {
+    dates: calendar.Date[];
   }
 }
