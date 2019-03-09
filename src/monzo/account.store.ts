@@ -3,11 +3,12 @@ import { createContext } from 'react';
 import { observable, computed, action } from 'mobx';
 import { formatCurrency } from '../common/utils';
 import * as apiService from './api-service';
+import { calendarStore } from '../calendar/calendar.store';
 // import { calendarStore } from '../calendar/calendar.store';
 
 class AccountStore {
-  @observable public transactions: Dictionary<monzo.Transaction[]> = {};
-  @observable public plannedTransactions: Dictionary<monzo.PlannedTransaction[]> = {};
+  @observable public transactions: monzo.Transactions = {};
+  @observable public plannedTransactions: monzo.PlannedTransactions = {};
   @observable public account: monzo.Balance;
   @observable public loggedIn: boolean;
   @observable public finalBalance: number;
@@ -52,21 +53,20 @@ class AccountStore {
       category: action.category,
       amount: (isDebit ? -action.amount : action.amount) * 100,
       currency: 'GBP',
-      date: undefined,
     };
 
     for (let i = 0; i < action.dates.length; ++i) {
-      const id = action.dates[i].date.unix();
+      const date = action.dates[i].date.unix();
 
-      if (!this.plannedTransactions[id]) {
-        this.plannedTransactions[id] = [];
+      if (!this.plannedTransactions[date]) {
+        this.plannedTransactions[date] = [];
       }
-      this.plannedTransactions[id].push({
+      this.plannedTransactions[date].push({
         ...savedAction,
-        date: action.dates[i].date.toISOString(),
       });
     }
 
+    localStorage.setObject('data.actions', this.plannedTransactions);
     this.updateFinalBalance();
   }
 
@@ -76,8 +76,9 @@ class AccountStore {
       const res = await apiService.initAccount();
 
       if (res) {
-        this.setTransactions(res.transactions);
         this.account = res.balance;
+        this.setTransactions(res.transactions);
+        this.recoverPlannedTransactions();
         this.updateFinalBalance();
         this.loggedIn = true;
       } else {
@@ -110,6 +111,29 @@ class AccountStore {
   }
 
   @action
+  private recoverPlannedTransactions() {
+    // Reset if the month has changed
+    const cachedMonth = parseInt(localStorage.getItem('data.month'));
+    const currentMonth = moment().month();
+
+    if (cachedMonth !== currentMonth) {
+      this.plannedTransactions = {};
+      localStorage.removeItem('data.actions');
+      // This will initialize month if not already set
+      localStorage.setItem('data.month', currentMonth.toString());
+      return;
+    }
+
+    let actions: monzo.PlannedTransactions = localStorage.getObject('data.actions') || {};
+
+    // Remove actions from past days
+    actions = this.filterOldActions(actions);
+
+    localStorage.setObject('data.actions', actions);
+    this.plannedTransactions = actions;
+  }
+
+  @action
   private updateFinalBalance() {
     let total = this.account.balance;
     const days = Object.keys(this.plannedTransactions);
@@ -123,6 +147,18 @@ class AccountStore {
     }
 
     this.finalBalance = total;
+  }
+
+  private filterOldActions(actions: monzo.PlannedTransactions) {
+    return Object.keys(actions)
+      .filter(unix => {
+        const date = moment.unix(parseInt(unix));
+        return date.isSameOrAfter(calendarStore.now, 'day');
+      })
+      .reduce((obj, key) => {
+        obj[key] = actions[key];
+        return obj;
+      }, {});
   }
 }
 

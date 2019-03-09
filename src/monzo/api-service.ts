@@ -17,6 +17,7 @@ export function initAccount(): Promise<monzo.InitResponse> {
     const code = url.searchParams.get('code');
     const state = url.searchParams.get('state');
 
+    // Start with a blank slate before assigning to localStorage
     clearStorageAfterLogin();
 
     if (code && state && stateToken) {
@@ -111,8 +112,6 @@ function clearStorageAfterLogin() {
   localStorage.removeItem('session.token');
   localStorage.removeItem('session.accountId');
   localStorage.removeItem('session.stateToken');
-  localStorage.removeItem('auth.clientId');
-  localStorage.removeItem('auth.clientSecret');
 }
 
 export class FetchError extends Error {

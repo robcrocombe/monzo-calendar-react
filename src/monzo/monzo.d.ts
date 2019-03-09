@@ -1,4 +1,6 @@
 declare namespace monzo {
+  type Transactions = Dictionary<monzo.Transaction[]>;
+  type PlannedTransactions = Dictionary<monzo.PlannedTransaction[]>;
   type TransactionType = 'debit' | 'credit';
   type Category =
     | 'general'
@@ -62,7 +64,6 @@ declare namespace monzo {
 
   interface PlannedTransaction {
     name: string;
-    date: string;
     category: Category;
     amount: number;
     currency: string;
