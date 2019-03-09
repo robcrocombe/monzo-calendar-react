@@ -37,8 +37,7 @@ export default function DatePicker(props: Props) {
       setSelected(
         calStore.calendar.filter(
           (d, i) =>
-            d.isCurrentMonth &&
-            ((i >= fromIndex && i <= toIndex) || selected.indexOf(d) !== -1)
+            d.isCurrentMonth && ((i >= fromIndex && i <= toIndex) || selected.indexOf(d) !== -1)
         )
       );
     } else if (selected.indexOf(day) === -1) {
@@ -62,9 +61,7 @@ export default function DatePicker(props: Props) {
       .filter(num => num && num > 0 && num <= endIndex);
 
     setSelected(
-      calStore.calendar.filter(
-        d => d.isCurrentMonth && dates.indexOf(d.date.date()) !== -1
-      )
+      calStore.calendar.filter(d => d.isCurrentMonth && dates.indexOf(d.date.date()) !== -1)
     );
   }
 

@@ -23,7 +23,7 @@ export function ActionModal(props: Props) {
 
   useEffect(() => {
     setVisibility(!!props.open);
-    setForm({...form, dates: props.open && [props.open]});
+    setForm({ ...form, dates: props.open && [props.open] });
   }, [props.open]);
 
   useEffect(() => {

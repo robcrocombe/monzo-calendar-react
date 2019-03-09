@@ -4,7 +4,7 @@
   "description": "A calendar for your Monzo money (now in React)",
   "main": "index.js",
   "scripts": {
-    "start": "parcel ./index.html",
+    "start": "parcel ./index.html --port 3000",
     "lint": "yarn lint:prettier && yarn lint:js && yarn lint:scss",
     "lint:prettier": "yarn prettier --loglevel warn 'src/**/*.{js,ts,tsx}'",
     "lint:scss": "stylelint \"**/*.scss\" --syntax scss",
@@ -16,7 +16,7 @@
     }
   },
   "lint-staged": {
-    "src/**/*.{js,jsx}": [
+    "src/**/*.{js,ts,tsx}": [
       "npm run prettier",
       "git add"
     ]
@@ -45,12 +45,10 @@
     "mobx-react-lite": "1.1.0",
     "moment": "2.24.0",
     "node-sass": "4.11.0",
-    "parcel": "1.11.0",
+    "parcel": "1.12.0",
     "postcss-modules": "1.4.1",
     "react": "16.8.4",
     "react-dom": "16.8.4",
-    "react-redux": "6.0.0",
-    "redux": "4.0.1",
     "typescript": "3.3.3"
   },
   "devDependencies": {

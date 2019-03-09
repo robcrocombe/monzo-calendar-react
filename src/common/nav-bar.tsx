@@ -9,7 +9,7 @@ const NavBar = observer(() => {
   const authStore = useContext(AuthStoreContext);
   let loginButton: React.ReactElement<any>;
 
-  const [ showLogoutModal, toggleLogoutModal ] = useState(false);
+  const [showLogoutModal, toggleLogoutModal] = useState(false);
   const closeLogoutModal = () => toggleLogoutModal(false);
 
   function logout() {
@@ -70,11 +70,7 @@ const NavBar = observer(() => {
       <div className="navbar-end">
         <div className="navbar-item">{loginButton}</div>
       </div>
-      <LogoutModal
-        visible={showLogoutModal}
-        close={closeLogoutModal}
-        submit={logout}
-      />
+      <LogoutModal visible={showLogoutModal} close={closeLogoutModal} submit={logout} />
       {/*<auth-modal
         :visible="showAuthModal"
         @close="closeAuthModal"

@@ -1,8 +1,8 @@
 import moment from 'moment';
 import { createContext } from 'react';
 import { observable, computed, action } from 'mobx';
-import { apiService } from './api.service';
 import { formatCurrency } from '../common/utils';
+import * as apiService from './api-service';
 // import { calendarStore } from '../calendar/calendar.store';
 
 class AccountStore {
