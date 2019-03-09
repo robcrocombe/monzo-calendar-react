@@ -3,6 +3,7 @@ import { observer } from 'mobx-react-lite';
 import { AccountStoreContext } from '../monzo/account.store';
 import { AuthStoreContext } from '../monzo/auth.store';
 import { LogoutModal } from './logout-modal';
+import { AuthModal, AuthForm } from './auth-modal';
 
 const NavBar = observer(() => {
   const accountStore = useContext(AccountStoreContext);
@@ -15,6 +16,14 @@ const NavBar = observer(() => {
   function logout() {
     localStorage.clear();
     location.reload();
+  }
+
+  const [showAuthModal, toggleAuthModal] = useState(false);
+  const closeAuthModal = () => toggleAuthModal(false);
+
+  function submitAuth(form: AuthForm) {
+    authStore.setClientVars(form.clientId, form.clientSecret);
+    location.href = authStore.loginUrl;
   }
 
   if (accountStore.loggedIn === true) {
@@ -33,7 +42,7 @@ const NavBar = observer(() => {
     } else {
       // Show Monzo vars modal
       loginButton = (
-        <button type="button" className="button is-primary">
+        <button type="button" className="button is-primary" onClick={() => toggleAuthModal(true)}>
           Login with Monzo
         </button>
       );
@@ -71,11 +80,7 @@ const NavBar = observer(() => {
         <div className="navbar-item">{loginButton}</div>
       </div>
       <LogoutModal visible={showLogoutModal} close={closeLogoutModal} submit={logout} />
-      {/*<auth-modal
-        :visible="showAuthModal"
-        @close="closeAuthModal"
-        @submit="saveClientVars">
-      </auth-modal>*/}
+      <AuthModal visible={showAuthModal} close={closeAuthModal} submit={submitAuth} />
     </nav>
   );
 });

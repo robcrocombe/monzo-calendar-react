@@ -48,11 +48,10 @@ class AccountStore {
 
   @action
   public addPlannedTransaction(action: monzo.TransactionForm) {
-    const isDebit = action.type === 'debit';
     const savedAction: monzo.PlannedTransaction = {
       name: action.name,
       category: action.category,
-      amount: (isDebit ? -action.amount : action.amount) * 100,
+      amount: this.sanitizeActionAmount(action),
       currency: 'GBP',
     };
 
@@ -162,6 +161,13 @@ class AccountStore {
         obj[key] = actions[key];
         return obj;
       }, {});
+  }
+
+  private sanitizeActionAmount(action: monzo.TransactionForm): number {
+    const isDebit = action.type === 'debit';
+    const amount = Math.abs(action.amount);
+
+    return (isDebit ? -amount : amount) * 100;
   }
 }
 
