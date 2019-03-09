@@ -17,7 +17,7 @@ class CalendarStore {
   @observable public endDate: moment.Moment;
   @observable public calendar: calendar.Date[];
   @observable public todayIndex: number;
-  public offsetMonth: number = 1;
+  public offsetMonth: number = 0;
   public readonly now = moment().subtract(this.offsetMonth, 'month');
 
   constructor() {

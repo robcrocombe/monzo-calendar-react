@@ -62,13 +62,17 @@ declare namespace monzo {
 
   interface PlannedTransaction {
     name: string;
+    date: string;
+    category: Category;
+    amount: number;
+    currency: string;
+  }
+
+  interface TransactionForm {
+    name: string;
     category: Category;
     type: TransactionType;
     amount: number;
-    currency?: string;
-  }
-
-  interface TransactionForm extends PlannedTransaction {
     dates: calendar.Date[];
   }
 }

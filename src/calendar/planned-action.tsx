@@ -7,7 +7,7 @@ interface Props {
 
 export default function PlannedAction(props: Props) {
   let value = formatCurrency(props.data.amount, props.data.currency);
-  if (props.data.type === 'credit') {
+  if (props.data.amount > 0) {
     value = `+${value}`;
   }
 

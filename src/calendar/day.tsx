@@ -24,7 +24,7 @@ const Day = observer((props: Props) => {
 
   let addActionBtn: React.ReactElement<any>;
 
-  if (props.day.isFuture && props.day.isCurrentMonth) {
+  if (accountStore.loggedIn && props.day.isFuture && props.day.isCurrentMonth) {
     addActionBtn = (
       <button
         onClick={props.openActionModal}

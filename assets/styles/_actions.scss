@@ -12,7 +12,7 @@ $categories:
   groceries
   personal_care;
 $cat-colors:
-  #4caf50
+  #00a300
   #607d8b
   #e91e63
   #795548
@@ -20,7 +20,7 @@ $cat-colors:
   #009688
   #03a9f4
   #ff5722
-  #9c27b0
+  #5C832F
   #673ab7
   #f0b400
   #0eb1a9;
@@ -36,10 +36,10 @@ $cat-colors:
 .tag.planned {
   background: repeating-linear-gradient(
     -50deg,
-    mix(white, black, 93%),
-    mix(white, black, 93%) 10px,
-    mix(white, black, 96%) 10px,
-    mix(white, black, 96%) 20px
+    mix(white, black, 90%),
+    mix(white, black, 90%) 10px,
+    mix(white, black, 95%) 10px,
+    mix(white, black, 95%) 20px
   );
 }
 
@@ -59,8 +59,8 @@ $cat-colors:
   .tag.planned.#{$cat} {
     background: repeating-linear-gradient(
       -50deg,
-      mix(white, $cat-color, 90%),
-      mix(white, $cat-color, 90%) 10px,
+      mix(white, $cat-color, 85%),
+      mix(white, $cat-color, 85%) 10px,
       mix(white, $cat-color, 95%) 10px,
       mix(white, $cat-color, 95%) 20px
     );

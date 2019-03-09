@@ -10,7 +10,7 @@ class AccountStore {
   @observable public plannedTransactions: Dictionary<monzo.PlannedTransaction[]> = {};
   @observable public account: monzo.Balance;
   @observable public loggedIn: boolean;
-  @observable public newBalance: number;
+  @observable public finalBalance: number;
 
   constructor() {
     this.init();
@@ -26,14 +26,14 @@ class AccountStore {
   @computed
   public get plannedBalance() {
     if (this.account) {
-      return formatCurrency(this.newBalance, this.account.currency);
+      return formatCurrency(this.finalBalance, this.account.currency);
     }
   }
 
   @computed
   public get diffAmount() {
     if (this.account) {
-      return this.newBalance - this.account.balance;
+      return this.finalBalance - this.account.balance;
     }
   }
 
@@ -46,8 +46,14 @@ class AccountStore {
 
   @action
   public addPlannedTransaction(action: monzo.TransactionForm) {
-    const newAction = { ...action, currency: 'GBP' };
-    delete newAction.dates;
+    const isDebit = action.type === 'debit';
+    const savedAction: monzo.PlannedTransaction = {
+      name: action.name,
+      category: action.category,
+      amount: (isDebit ? -action.amount : action.amount) * 100,
+      currency: 'GBP',
+      date: undefined,
+    };
 
     for (let i = 0; i < action.dates.length; ++i) {
       const id = action.dates[i].date.unix();
@@ -55,8 +61,13 @@ class AccountStore {
       if (!this.plannedTransactions[id]) {
         this.plannedTransactions[id] = [];
       }
-      this.plannedTransactions[id].push(newAction);
+      this.plannedTransactions[id].push({
+        ...savedAction,
+        date: action.dates[i].date.toISOString(),
+      });
     }
+
+    this.updateFinalBalance();
   }
 
   @action
@@ -67,6 +78,7 @@ class AccountStore {
       if (res) {
         this.setTransactions(res.transactions);
         this.account = res.balance;
+        this.updateFinalBalance();
         this.loggedIn = true;
       } else {
         this.loggedIn = false;
@@ -95,6 +107,22 @@ class AccountStore {
       }
       this.transactions[id].push(action);
     }
+  }
+
+  @action
+  private updateFinalBalance() {
+    let total = this.account.balance;
+    const days = Object.keys(this.plannedTransactions);
+
+    for (let i = 0; i < days.length; ++i) {
+      const dayActions = this.plannedTransactions[days[i]];
+
+      for (let ii = 0; ii < dayActions.length; ++ii) {
+        total += dayActions[ii].amount;
+      }
+    }
+
+    this.finalBalance = total;
   }
 }
 
