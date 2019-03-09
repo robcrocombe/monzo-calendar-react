@@ -11,6 +11,7 @@ class AccountStore {
   @observable public plannedTransactions: monzo.PlannedTransactions = {};
   @observable public account: monzo.Balance;
   @observable public loggedIn: boolean;
+  @observable public loading: boolean = true;
   @observable public finalBalance: number;
 
   constructor() {
@@ -93,6 +94,8 @@ class AccountStore {
         localStorage.removeItem('session.accountId');
       }
     }
+
+    this.loading = false;
   }
 
   @action

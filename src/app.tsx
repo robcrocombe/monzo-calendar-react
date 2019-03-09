@@ -1,13 +1,29 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { AccountStoreContext } from './monzo/account.store';
 import NavBar from './common/nav-bar';
 import Calendar from './calendar/calendar';
+import { useObserver } from 'mobx-react-lite';
+import LoadingIcon from './common/loading-icon';
 
 export default function App() {
+  const accountStore = useContext(AccountStoreContext);
+  const pageState = useObserver(() => {
+    if (accountStore.loading) {
+      return (
+        <div className="loading-container">
+          <LoadingIcon />
+        </div>
+      );
+    } else {
+      return <Calendar />;
+    }
+  });
+
   return (
     <React.Fragment>
       <main>
         <NavBar />
-        <Calendar />
+        {pageState}
       </main>
       <footer id="page-footer">
         <div className="has-text-centered">

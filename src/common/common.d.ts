@@ -1,3 +1,6 @@
+declare module '*.webp';
+declare module '*.gif';
+
 interface Dictionary<T> {
   [key: string]: T;
 }

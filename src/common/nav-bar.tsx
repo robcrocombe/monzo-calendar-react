@@ -13,8 +13,8 @@ const NavBar = observer(() => {
   const closeLogoutModal = () => toggleLogoutModal(false);
 
   function logout() {
-    // window.localStorage.clear();
-    window.location.reload();
+    localStorage.clear();
+    location.reload();
   }
 
   if (accountStore.loggedIn === true) {
@@ -47,11 +47,11 @@ const NavBar = observer(() => {
       </div>
       <div className="navbar-item">
         Current Balance:&nbsp;
-        <span className="has-text-info">{accountStore.currentBalance}</span>
+        <span className="has-text-info">{accountStore.currentBalance || '£0.00'}</span>
       </div>
       <div className="navbar-item">
         Planned Balance:&nbsp;
-        <span className="has-text-info">{accountStore.plannedBalance}</span>
+        <span className="has-text-info">{accountStore.plannedBalance || '£0.00'}</span>
       </div>
       <div className="navbar-item" title="Profit/Loss">
         P/L:&nbsp;
@@ -64,7 +64,7 @@ const NavBar = observer(() => {
               : null
           }
         >
-          {accountStore.diffBalance}
+          {accountStore.diffBalance || '0.00'}
         </span>
       </div>
       <div className="navbar-end">

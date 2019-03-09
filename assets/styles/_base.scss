@@ -12,6 +12,13 @@ code {
   border-radius: 2px;
 }
 
+.loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 96px - 52px);
+}
+
 #page-footer {
   margin: 2rem;
   flex-shrink: 0;
