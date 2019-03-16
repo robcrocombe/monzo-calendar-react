@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "parcel ./index.html --port 3000",
+    "build": "rm -rf dist && parcel build ./index.html --public-url ./ --no-cache",
+    "deploy": "yarn build && node ./deploy.js",
     "lint": "yarn lint:prettier && yarn lint:js && yarn lint:scss",
     "lint:prettier": "yarn prettier --loglevel warn 'src/**/*.{js,ts,tsx}'",
     "lint:scss": "stylelint \"**/*.scss\" --syntax scss",
