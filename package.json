@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "parcel ./index.html --port 3000",
-    "build": "rm -rf dist && parcel build ./index.html --public-url ./ --no-cache",
+    "build": "rm -rf dist && parcel build ./index.html --public-url 'monzo-calendar-react/' --no-cache",
     "deploy": "yarn build && node ./deploy.js",
     "lint": "yarn lint:prettier && yarn lint:js && yarn lint:scss",
     "lint:prettier": "yarn prettier --loglevel warn 'src/**/*.{js,ts,tsx}'",
