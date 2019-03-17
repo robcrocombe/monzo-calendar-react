@@ -1,13 +1,17 @@
 import React from 'react';
 import hotChipWebP from '../../assets/images/hot-chip.webp';
-import hotChipJpeg from '../../assets/images/hot-chip.gif';
+import hotChipGif from '../../assets/images/hot-chip.gif';
 
 export default function LoadingIcon() {
+  function imageSrc(src: string): string {
+    return location.href + src.substr(src.lastIndexOf('/') + 1, src.length);
+  }
+
   return (
     <picture style={{ display: 'block', width: '12.5rem' }}>
-      <source srcSet={hotChipWebP} type="image/webp" />
-      <source srcSet={hotChipJpeg} type="image/gif" />
-      <img src={hotChipJpeg} alt="Loading" />
+      <source srcSet={imageSrc(hotChipWebP)} type="image/webp" />
+      <source srcSet={imageSrc(hotChipGif)} type="image/gif" />
+      <img src={imageSrc(hotChipGif)} alt="Loading" />
     </picture>
   );
 }
