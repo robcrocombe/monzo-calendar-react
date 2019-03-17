@@ -1,6 +1,6 @@
 # Monzo Calendar (React)
 
-A calendar for your [Monzo](https://monzo.com) money, now in React! You can:
+A calendar for your [Monzo](https://monzo.com) money. [Originally written in Vue](https://github.com/robcrocombe/monzo-calendar), I wanted to try again in React. You can:
 
 * View this month's transactions in a calendar view.
 * View your current balance.
