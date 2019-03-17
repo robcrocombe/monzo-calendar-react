@@ -142,11 +142,11 @@ export function ActionModal(props: Props) {
 
   const footer = (
     <React.Fragment>
-      <button className="button is-success" onClick={save} disabled={invalidForm}>
-        Save
-      </button>
       <button className="button" onClick={close}>
         Cancel
+      </button>
+      <button className="button is-success" onClick={save} disabled={invalidForm}>
+        Save
       </button>
     </React.Fragment>
   );

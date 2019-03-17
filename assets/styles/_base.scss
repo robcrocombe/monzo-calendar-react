@@ -19,6 +19,14 @@ code {
   height: calc(100vh - 96px - 52px);
 }
 
+.modal-card-foot {
+  justify-content: space-between;
+
+  button {
+    min-width: 80px;
+  }
+}
+
 #page-footer {
   margin: 2rem;
   flex-shrink: 0;

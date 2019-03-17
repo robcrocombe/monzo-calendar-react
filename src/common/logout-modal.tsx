@@ -19,14 +19,14 @@ export function LogoutModal(props: Props) {
         </div>
       }
       footer={
-        <div>
-          <button className="button is-primary" onClick={props.submit}>
-            Log out
-          </button>
+        <React.Fragment>
           <button className="button" onClick={props.close}>
             Cancel
           </button>
-        </div>
+          <button className="button is-primary" onClick={props.submit}>
+            Log out
+          </button>
+        </React.Fragment>
       }
     />
   );

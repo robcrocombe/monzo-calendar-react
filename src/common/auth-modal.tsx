@@ -93,15 +93,15 @@ export function AuthModal(props: Props) {
 
   const footer = (
     <React.Fragment>
+      <button className="button" onClick={props.close}>
+        Cancel
+      </button>
       <button
         className="button is-primary"
         onClick={() => props.submit(form)}
         disabled={invalidForm}
       >
         Login
-      </button>
-      <button className="button" onClick={props.close}>
-        Cancel
       </button>
     </React.Fragment>
   );
