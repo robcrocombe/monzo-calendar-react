@@ -8,6 +8,7 @@ import { AuthModal, AuthForm } from './auth-modal';
 const NavBar = observer(() => {
   const accountStore = useContext(AccountStoreContext);
   const authStore = useContext(AuthStoreContext);
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
   let loginButton: React.ReactElement<any>;
 
   const [showLogoutModal, toggleLogoutModal] = useState(false);
@@ -22,6 +23,7 @@ const NavBar = observer(() => {
   const closeAuthModal = () => toggleAuthModal(false);
 
   function submitAuth(form: AuthForm) {
+    setIsAuthenticating(true);
     authStore.setClientVars(form.clientId, form.clientSecret);
     location.href = authStore.loginUrl;
   }
@@ -33,7 +35,7 @@ const NavBar = observer(() => {
       </button>
     );
   } else if (accountStore.loggedIn === false) {
-    if (authStore.hasClientVars) {
+    if (authStore.hasClientVars && !isAuthenticating) {
       loginButton = (
         <a className="button is-primary" href={authStore.loginUrl}>
           Login with Monzo
