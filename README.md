@@ -10,7 +10,7 @@ A calendar for your [Monzo](https://monzo.com) money. [Originally written in Vue
 
 ## Getting Started
 
-This web app is written in [Vue.js](https://vuejs.org) with [Parcel](https://parceljs.org).
+This web app is written in [React.js](https://reactjs.org) with [Parcel](https://parceljs.org).
 
 * Clone this repo.
 * Run [Yarn](https://yarnpkg.com) to install dependencies.
